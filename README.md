@@ -7,7 +7,7 @@ What this script does:
 mode:init
 - Pulls and launches Vault docker container
 - Enable AppRole
-- Write provided secret to path 'secret/sdc/passwd'
+- Write provided secret to path 'secret/sdc/passwd' under key 'value'
 - Create role 'sdcrole' with read policy on 'secret/sdc/*'
 - Print obtained role ID and secret ID for 'sdcrole'
 
@@ -42,3 +42,19 @@ To validate the secret is readable by logging in with the returned role ID + sec
 ```
 launch_vault read-secret --secret-id <secret_id> --role-id <role_id>
 ```
+
+For StreamSets Data Collector:
+
+In $SDC_CONF/credential-stores.properties, set the following parameters:
+```
+credentialStores=vault
+credentialStore.vault.config.role.id=<role_id>
+credentialStore.vault.config.secret.id=<secret_id>
+```
+where:
+
+<role_id> is the Role ID returned from 'launch_vault init'
+
+<secret_id> is the Secret ID returned from 'launch_vault init'.  If set to a file (e.g. ${file("vault-secret-id")}), update the content of the file with the Secret ID returned.
+
+Afterwards, restart Data Collector, and the secret should be accessible through the credential EL.  E.g. ${credential:get("vault", "all", "/secret/sdc/passwd&value")}
