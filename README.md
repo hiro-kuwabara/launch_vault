@@ -23,7 +23,7 @@ To install:
 ```
 git clone https://github.com/hiro-kuwabara/launch_vault/
 cd launch_vault
-sudo pip3 install .
+pip3 install .
 ```
 
 You should now be able to run 'launch_vault' on commandline.
